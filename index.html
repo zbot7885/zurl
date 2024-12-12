@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Redirecting...</title>
+    <meta name="referrer" content="never" />
+  </head>
+
+  <body>
+    <p id="text"></p>
+    <script>
+      document.getElementById("text").innerHTML = "dh-hos-code: redirecting...";
+      const searchParams = new URLSearchParams(window.location.href);
+      let redirect_url = searchParams.get("redirect_url");
+      fetch(redirect_url, { method: "GET", redirect: "follow" })
+        .then((response) => response.text())
+        .then((result) => {
+          let url = JSON.parse(result);
+          if (url) {
+            try {
+              new URL(url); // Will throw error for invalid URLs
+              window.location.href = url;
+            } catch (_) {
+              document.getElementById("text").innerHTML = "Error: invalid URL";
+            }
+          } else {
+            document.getElementById("text").innerHTML = "Error: no valid parameter";
+          }
+        })
+        .catch((error) => console.error(error));
+    </script>
+  </body>
+</html>
